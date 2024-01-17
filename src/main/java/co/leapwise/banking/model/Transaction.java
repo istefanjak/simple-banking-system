@@ -4,10 +4,15 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.time.LocalDateTime;
-import lombok.Data;
+import lombok.*;
 
 @Entity
-@Data
+@Builder
+@Getter
+@Setter
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 public class Transaction {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

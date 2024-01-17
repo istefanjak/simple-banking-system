@@ -2,12 +2,16 @@ package co.leapwise.banking.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
-
 import java.util.List;
+import lombok.*;
 
 @Entity
-@Data
+@Builder
+@Getter
+@Setter
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 public class Currency {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

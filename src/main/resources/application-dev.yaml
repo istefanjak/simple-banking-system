@@ -1,0 +1,11 @@
+co:
+  leapwise:
+    banking:
+      number-of-transactions: 100
+      generated-file-name: transactions.txt
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
