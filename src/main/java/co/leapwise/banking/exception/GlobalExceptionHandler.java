@@ -18,6 +18,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionResponse(msg));
   }
 
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<ExceptionResponse> illegalArgument(Exception e) {
+    var msg = "Illegal argument";
+    log.error(msg, e);
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(new ExceptionResponse(e.getMessage()));
+  }
+
+  @ExceptionHandler(IllegalStateException.class)
+  public ResponseEntity<ExceptionResponse> illegalState(Exception e) {
+    var msg = "Illegal state";
+    log.error(msg, e);
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(new ExceptionResponse(e.getMessage()));
+  }
+
   @ExceptionHandler(EntityNotFoundException.class)
   public ResponseEntity<ExceptionResponse> entityNotFound(Exception e) {
     var msg = "Entity not found";

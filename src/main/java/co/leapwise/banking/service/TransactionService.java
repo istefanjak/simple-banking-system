@@ -1,13 +1,16 @@
 package co.leapwise.banking.service;
 
+import co.leapwise.banking.common.Const;
 import co.leapwise.banking.manager.AccountManager;
 import co.leapwise.banking.manager.CurrencyManager;
 import co.leapwise.banking.manager.MTransactionManager;
+import co.leapwise.banking.model.Account;
 import co.leapwise.banking.model.Transaction;
 import co.leapwise.banking.request.TransactionRequest;
 import co.leapwise.banking.request.params.TransactionParams;
 import co.leapwise.banking.response.PageableResponse;
 import co.leapwise.banking.response.TransactionResponse;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -18,12 +21,19 @@ public class TransactionService {
   private final MTransactionManager transactionManager;
   private final AccountManager accountManager;
   private final CurrencyManager currencyManager;
+  private final CurrencyConverter currencyConverter;
   private final ModelMapper modelMapper;
 
   public Long insertTransaction(TransactionRequest request) {
     var sender = accountManager.getAccount(request.getSenderId());
     var receiver = accountManager.getAccount(request.getReceiverId());
     var currency = currencyManager.getCurrency(request.getCurrencyId());
+
+    var amount =
+        currencyConverter.convert(
+            request.getAmount(), currency.getCurrencyId(), Const.MAIN_CURRENCY_ID);
+    validateSenderAndReceiver(sender, receiver, amount);
+    transferBalance(sender, receiver, amount);
 
     var transaction =
         Transaction.builder()
@@ -41,6 +51,23 @@ public class TransactionService {
     transactionManager.insertTransaction(transaction);
 
     return transaction.getTransactionId();
+  }
+
+  private void validateSenderAndReceiver(Account sender, Account receiver, Long amount) {
+    if (Objects.equals(sender.getAccountId(), receiver.getAccountId())) {
+      throw new IllegalArgumentException("Sender same as receiver.");
+    }
+
+    if (amount > sender.getBalance()) {
+      throw new IllegalStateException("Insufficient account balance.");
+    }
+  }
+
+  private void transferBalance(Account sender, Account receiver, Long amount) {
+    var senderBalance = sender.getBalance() - amount;
+    var receiverBalance = receiver.getBalance() + amount;
+    sender.setBalance(senderBalance);
+    receiver.setBalance(receiverBalance);
   }
 
   public PageableResponse<TransactionResponse> getTransactionsByCustomer(
