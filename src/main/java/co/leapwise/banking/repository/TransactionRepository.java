@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -34,10 +33,8 @@ public interface TransactionRepository extends CrudRepository<Transaction, Long>
           + "AND (:#{#params.receiverAddress} IS NULL OR t.receiver.customer.address = :#{#params.receiverAddress}) "
           + "AND (:#{#params.receiverEmail} IS NULL OR t.receiver.customer.email = :#{#params.receiverEmail}) "
           + "AND (:#{#params.receiverPhoneNumber} IS NULL OR t.receiver.customer.phoneNumber = :#{#params.receiverPhoneNumber})")
-  Page<Transaction> findByCustomerId(
-      Long customerId, @Param("params") TransactionParams params, Pageable pageable);
+  Page<Transaction> findByCustomerId(Long customerId, TransactionParams params, Pageable pageable);
 
-  // TODO provjeriti treba li nam @Param
   @Query(
       "SELECT t FROM Transaction t "
           + "WHERE (t.sender.accountId = :accountId OR t.receiver.accountId = :accountId) "
