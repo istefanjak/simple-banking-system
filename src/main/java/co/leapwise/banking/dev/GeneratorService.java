@@ -8,6 +8,7 @@ import co.leapwise.banking.model.Customer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -86,7 +87,7 @@ public class GeneratorService {
         .amount(amount)
         .currencyId(currency.getCurrencyId())
         .message("Random message " + amount)
-        .timeStamp(Utils.getRandomLocalDateTime())
+        .timeStamp(LocalDateTime.now().minusMonths(1))
         .build();
   }
 
