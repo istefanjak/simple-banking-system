@@ -14,3 +14,8 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
+
+co:
+  leapwise:
+    banking:
+      monthly-turnover-job-cron: "0 0 0 1 * ?"

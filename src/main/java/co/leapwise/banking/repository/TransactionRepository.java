@@ -2,6 +2,7 @@ package co.leapwise.banking.repository;
 
 import co.leapwise.banking.model.Transaction;
 import co.leapwise.banking.request.params.TransactionParams;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -35,4 +36,12 @@ public interface TransactionRepository extends CrudRepository<Transaction, Long>
           + "AND (:#{#params.receiverPhoneNumber} IS NULL OR t.receiver.customer.phoneNumber = :#{#params.receiverPhoneNumber})")
   Page<Transaction> findByCustomerId(
       Long customerId, @Param("params") TransactionParams params, Pageable pageable);
+
+  // TODO provjeriti treba li nam @Param
+  @Query(
+      "SELECT t FROM Transaction t "
+          + "WHERE (t.sender.accountId = :accountId OR t.receiver.accountId = :accountId) "
+          + "AND MONTH(t.timeStamp) = :month "
+          + "AND YEAR(t.timeStamp) = :year")
+  List<Transaction> findByMonthAndYear(Long accountId, int year, int month);
 }

@@ -3,9 +3,10 @@ co:
     banking:
       number-of-transactions: 100
       generated-file-name: transactions.txt
+      monthly-turnover-job-cron: "*/5 * * ? * *"
 
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: DEBUG
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        SQL: DEBUG
