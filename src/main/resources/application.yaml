@@ -15,7 +15,17 @@ spring:
     username: sa
     password:
 
+  mail:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
 co:
   leapwise:
     banking:
       monthly-turnover-job-cron: "0 0 0 1 * ?"
+      email-sender-address: test@test.com

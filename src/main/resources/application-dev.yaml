@@ -1,3 +1,10 @@
+spring:
+  mail:
+    host: smtp.ethereal.email
+    port: 587
+    username: dax47@ethereal.email
+    password: bQxghhmVwcdGhhePb3
+
 co:
   leapwise:
     banking:

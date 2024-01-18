@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /** Service for generating/mapping sample data to/ from a file */
@@ -22,6 +23,9 @@ public class GeneratorService {
   private static final Long MIN_GENERATED_TRANSACTION_AMOUNT = 1L;
   private static final Long MAX_GENERATED_TRANSACTION_AMOUNT = 1000L;
   private static final Long MAX_BALANCE = 999999999L;
+
+  @Value("${spring.mail.username}")
+  private String email;
 
   private final ObjectMapper objectMapper;
 
@@ -95,7 +99,7 @@ public class GeneratorService {
     return Customer.builder()
         .name("Ivan Horvat")
         .address("Ilica 1")
-        .email("ivan@mail.com")
+        .email(email)
         .phoneNumber("091 0000000")
         .accounts(new ArrayList<>())
         .build();
