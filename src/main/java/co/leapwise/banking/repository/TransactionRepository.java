@@ -14,7 +14,7 @@ public interface TransactionRepository extends CrudRepository<Transaction, Long>
   @Query(
       "SELECT t FROM Transaction t "
           + "WHERE (t.sender.customer.customerId = :customerId OR t.receiver.customer.customerId = :customerId) "
-          + "AND (:#{#params.transactionId} IS NULL OR t.transactionId = :#{#params.transactionId})"
+          + "AND (:#{#params.transactionId} IS NULL OR t.transactionId = :#{#params.transactionId}) "
           + "AND (:#{#params.amount} IS NULL OR t.amount = :#{#params.amount}) "
           + "AND (:#{#params.currencyName} IS NULL OR t.currency.name = :#{#params.currencyName}) "
           + "AND (:#{#params.senderAccountId} IS NULL OR t.sender.accountId = :#{#params.senderAccountId}) "
