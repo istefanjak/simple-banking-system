@@ -28,7 +28,7 @@ public class Account {
   @NotNull(message = "Balance must not be null.")
   private Long balance;
 
-  private Long pastMonthTurnover = 0L;
+  private Long pastMonthTurnover;
 
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "customerId")
