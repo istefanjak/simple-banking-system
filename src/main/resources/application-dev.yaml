@@ -8,7 +8,7 @@ spring:
 co:
   leapwise:
     banking:
-      number-of-transactions: 100
+      number-of-transactions: 100000
       generated-file-name: transactions.txt
       monthly-turnover-job-cron: "*/5 * * ? * *"
 

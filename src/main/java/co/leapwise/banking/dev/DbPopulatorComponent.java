@@ -47,7 +47,6 @@ public class DbPopulatorComponent {
     log.info("Transactions file generated");
 
     // Read file
-    // TODO concurrency
     var serializedTransactions = generatorService.readTransactions(properties.generatedFileName());
     var transactions =
         serializedTransactions.stream().map(this::mapSerializedTransactionToTransaction).toList();

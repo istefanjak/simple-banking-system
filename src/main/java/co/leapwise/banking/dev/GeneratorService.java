@@ -11,6 +11,8 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class GeneratorService {
+  private static final int THREAD_NUM = 8;
+
   private static final Long MIN_GENERATED_TRANSACTION_AMOUNT = 1L;
   private static final Long MAX_GENERATED_TRANSACTION_AMOUNT = 1000L;
   private static final Long MAX_BALANCE = 999999999L;
@@ -48,11 +52,35 @@ public class GeneratorService {
     var transactions = new ArrayList<SerializedTransaction>();
 
     try (var reader = new BufferedReader(new FileReader(fileName))) {
+      var futures = new ArrayList<CompletableFuture<Void>>();
+      var executorService = Executors.newFixedThreadPool(THREAD_NUM);
+
       String line;
       while ((line = reader.readLine()) != null) {
-        var transaction = objectMapper.readValue(line, SerializedTransaction.class);
-        transactions.add(transaction);
+        final var finalLine = line;
+        var future =
+            CompletableFuture.runAsync(
+                () -> {
+                  SerializedTransaction transaction;
+                  try {
+                    transaction = objectMapper.readValue(finalLine, SerializedTransaction.class);
+                  } catch (IOException e) {
+                    throw new RuntimeException(e);
+                  }
+                  if (transaction != null) {
+                    synchronized (transactions) {
+                      transactions.add(transaction);
+                    }
+                  }
+                },
+                executorService);
+        futures.add(future);
       }
+
+      var allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+      allOf.join();
+
+      executorService.shutdown();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
