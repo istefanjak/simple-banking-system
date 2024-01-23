@@ -16,11 +16,13 @@ import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /** Service for generating/mapping sample data to/ from a file */
 @Service
 @RequiredArgsConstructor
+@Profile("dev")
 public class GeneratorService {
   private static final int THREAD_NUM = 8;
 
